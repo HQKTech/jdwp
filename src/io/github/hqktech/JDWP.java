@@ -453,8 +453,9 @@ public class JDWP {
 	}
 
 	public static void encodeString(ByteBuffer bytes, String str) {
-		encodeInt(bytes, str.length());
-		encodeRaw(bytes, str.getBytes(StandardCharsets.UTF_8));
+		byte[] encoded = str.getBytes(StandardCharsets.UTF_8);
+		encodeInt(bytes, encoded.length);
+		encodeRaw(bytes, encoded);
 	}
 
 	public static void encodeRaw(ByteBuffer bytes, ByteBuffer raw) {
@@ -7476,12 +7477,13 @@ public class JDWP {
 		}
 
 		static void encode(String val, ByteBuffer bytes) {
-			JDWP.encodeInt(bytes, val.length());
-			bytes.addAll(val.getBytes(StandardCharsets.UTF_8));
+			byte[] encoded = val.getBytes(StandardCharsets.UTF_8);
+			JDWP.encodeInt(bytes, encoded.length);
+			bytes.addAll(encoded);
 		}
 
 		static int getSize(String str) {
-			return 4 + str.length();
+			return 4 + str.getBytes(StandardCharsets.UTF_8).length;
 		}
 
 	}
